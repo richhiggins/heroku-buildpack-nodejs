@@ -63,17 +63,23 @@ restore_default_cache_directories() {
       echo "- node_modules"
       mkdir -p "$(dirname "$build_dir/node_modules")"
       mv "$cache_dir/node/cache/node_modules" "$build_dir/node_modules"
-      echo "- Gatsby .cache"
-      mkdir -p "$(dirname "$build_dir/.cache")"
-      mv "$cache_dir/node/cache/.cache" "$build_dir/.cache"
-      chmod -R 777 "$build_dir/.cache"
-      echo "- Gatsby public"
-      mkdir -p "$(dirname "$build_dir/public")"
-      mv "$cache_dir/node/cache/public" "$build_dir/public"
-      chmod -R 777 "$build_dir/public"
     else
       echo "- node_modules (not cached - skipping)"
     fi
+  fi
+
+  # gatsby cache folder, should be silent if it is not in the cache
+  if [[ -e "$cache_dir/node/cache/.cache" ]]; then
+    echo "- Gatsby .cache directory"
+    mkdir -p "$(dirname "$build_dir/.cache")"
+    mv "$cache_dir/node/cache/.cache" "$build_dir/.cache"
+  fi
+
+  # gatsby public folder, should be silent if it is not in the cache
+  if [[ -e "$cache_dir/node/cache/public" ]]; then
+    echo "- Gatsby public directory"
+    mkdir -p "$(dirname "$build_dir/public")"
+    mv "$cache_dir/node/cache/public" "$build_dir/public"
   fi
 
   # bower_components, should be silent if it is not in the cache
@@ -129,17 +135,23 @@ save_default_cache_directories() {
       echo "- node_modules"
       mkdir -p "$cache_dir/node/cache/node_modules"
       cp -a "$build_dir/node_modules" "$(dirname "$cache_dir/node/cache/node_modules")"
-      echo "- Gatsby .cache folder"
-      mkdir -p "$cache_dir/node/cache/.cache"
-      cp -a "$build_dir/.cache" "$(dirname "$cache_dir/node/cache/.cache")"
-      echo "- Gatsby public folder"
-      mkdir -p "$cache_dir/node/cache/public"
-      cp -a "$build_dir/public" "$(dirname "$cache_dir/node/cache/public")"
     else
       # this can happen if there are no dependencies
       mcount "cache.no-node-modules"
       echo "- node_modules (nothing to cache)"
     fi
+  fi
+
+  if [[ -e "$build_dir/.cache" ]]; then
+    echo "- Gatsby .cache folder"
+    mkdir -p "$cache_dir/node/cache/.cache"
+    cp -a "$build_dir/.cache" "$(dirname "$cache_dir/node/cache/.cache")"
+  fi
+
+  if [[ -e "$build_dir/public" ]]; then
+    echo "- Gatsby public folder"
+    mkdir -p "$cache_dir/node/cache/public"
+    cp -a "$build_dir/public" "$(dirname "$cache_dir/node/cache/public")"
   fi
 
   # bower_components
