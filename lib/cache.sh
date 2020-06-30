@@ -66,9 +66,11 @@ restore_default_cache_directories() {
       echo "- Gatsby .cache"
       mkdir -p "$(dirname "$build_dir/.cache")"
       mv "$cache_dir/node/cache/.cache" "$build_dir/.cache"
+      chmod -R 777 "$build_dir/.cache"
       echo "- Gatsby public"
       mkdir -p "$(dirname "$build_dir/public")"
       mv "$cache_dir/node/cache/public" "$build_dir/public"
+      chmod -R 777 "$build_dir/public"
     else
       echo "- node_modules (not cached - skipping)"
     fi
