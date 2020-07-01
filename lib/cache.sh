@@ -73,7 +73,7 @@ restore_default_cache_directories() {
     echo "- Gatsby .cache directory"
     mkdir -p "$(dirname "$build_dir/.cache")"
     mv "$cache_dir/node/cache/.cache" "$build_dir/.cache"
-    chmod -R 777 "$build_dir/.cache"
+    chmod -R 755 "$build_dir/.cache"
   fi
 
   # gatsby public folder, should be silent if it is not in the cache
@@ -81,13 +81,15 @@ restore_default_cache_directories() {
     echo "- Gatsby public directory"
     mkdir -p "$(dirname "$build_dir/public")"
     mv "$cache_dir/node/cache/public" "$build_dir/public"
-    chmod -R 777 "$build_dir/.cache"
+    chmod -R 755 "$build_dir/.cache"
   fi
 
   # bower_components, should be silent if it is not in the cache
   if [[ -e "$cache_dir/node/cache/bower_components" ]]; then
     echo "- bower_components"
   fi
+
+  ls -l -a
 }
 
 restore_custom_cache_directories() {
